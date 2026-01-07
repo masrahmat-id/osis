@@ -5,13 +5,23 @@
     <title>E-Voting OSIS 2026</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Tambahan style agar tampilan input otomatis terlihat berbeda */
         input:readonly {
             background-color: #f1f5f9;
             color: #475569;
             cursor: not-allowed;
         }
         .hidden { display: none; }
+        
+        /* CSS Tambahan sederhana jika belum ada style.css */
+        .container { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+        .btn { padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .grid-paslon { display: flex; gap: 20px; justify-content: center; margin-top: 20px; }
+        .card { border: 1px solid #ddd; border-radius: 10px; overflow: hidden; width: 300px; text-align: center; }
+        .card img { width: 100%; height: auto; }
+        .card-content { padding: 15px; }
     </style>
 </head>
 <body>
@@ -87,7 +97,6 @@
 
     let userAktif = null;
 
-    // FUNGSI CEK NISN OTOMATIS
     function cekNISN() {
         const nisnInput = document.getElementById('nisn-field').value;
         const autoNama = document.getElementById('auto-nama');
@@ -95,28 +104,22 @@
         const btnMasuk = document.getElementById('btn-masuk');
         const errorMsg = document.getElementById('error-msg');
 
-        // Cari data siswa
         const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
 
         if (siswa) {
-            // Jika ketemu, isi kolom nama & kelas
             autoNama.value = siswa.nama;
             autoKelas.value = siswa.kelas;
-            
-            // Aktifkan tombol masuk
             btnMasuk.disabled = false;
             btnMasuk.style.opacity = "1";
             btnMasuk.style.cursor = "pointer";
             errorMsg.classList.add('hidden');
         } else {
-            // Jika tidak ketemu/sedang mengetik
             autoNama.value = "";
             autoKelas.value = "";
             btnMasuk.disabled = true;
             btnMasuk.style.opacity = "0.5";
             btnMasuk.style.cursor = "not-allowed";
             
-            // Tampilkan error hanya jika sudah mengetik minimal 5 angka
             if(nisnInput.length >= 5) {
                 errorMsg.innerText = "NISN tidak terdaftar!";
                 errorMsg.classList.remove('hidden');
@@ -139,25 +142,27 @@
             userAktif = siswa;
             document.getElementById('display-nama').innerText = siswa.nama;
             document.getElementById('display-kelas').innerText = siswa.kelas;
-            
             document.getElementById('login-page').classList.add('hidden');
             document.getElementById('vote-page').classList.remove('hidden');
         }
     }
 
+    // FUNGSI SIMPAN SUARA (SUDAH DIPERBARUI: TANPA KONFIRMASI)
     function simpanSuara(pilihan) {
-        if(confirm(`Yakin ingin memilih ${pilihan}?`)) {
-            localStorage.setItem('voted_' + userAktif.nisn, "true");
-            
-            let suaraSekarang = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
-            suaraSekarang[pilihan] += 1;
-            localStorage.setItem('rekap_suara', JSON.stringify(suaraSekarang));
+        // Langsung simpan status sudah memilih
+        localStorage.setItem('voted_' + userAktif.nisn, "true");
+        
+        // Update rekap suara di localStorage
+        let suaraSekarang = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
+        suaraSekarang[pilihan] += 1;
+        localStorage.setItem('rekap_suara', JSON.stringify(suaraSekarang));
 
-            document.getElementById('vote-page').classList.add('hidden');
-            document.getElementById('thanks-page').classList.remove('hidden');
+        // Pindah ke halaman terima kasih
+        document.getElementById('vote-page').classList.add('hidden');
+        document.getElementById('thanks-page').classList.remove('hidden');
 
-            setTimeout(() => { location.reload(); }, 3000);
-        }
+        // Reset halaman setelah 3 detik
+        setTimeout(() => { location.reload(); }, 3000);
     }
 </script>
 </body>
