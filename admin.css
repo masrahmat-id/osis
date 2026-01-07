@@ -1,0 +1,41 @@
+body {
+    background-color: #0f172a;
+    color: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+    padding: 40px;
+}
+
+.dashboard-card {
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid #334155;
+    margin-bottom: 2rem;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-item {
+    background: #334155;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.progress-bar {
+    height: 20px;
+    background: #475569;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #10b981;
+    transition: width 1s ease-in-out;
+}
