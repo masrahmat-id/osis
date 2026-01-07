@@ -2,109 +2,115 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Voting OSIS 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .hidden { display: none; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
 
-    <div id="login-section" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login Pemilih</h2>
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Masukkan NISN</label>
-                <input type="text" id="nisn-input" class="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Contoh: 12345">
+<div class="container">
+    <div id="login-page" class="login-box">
+        <h2 style="color: #1e293b; margin-bottom: 0.5rem;">E-Voting OSIS</h2>
+        <p style="color: #64748b; margin-bottom: 2rem;">Silahkan login menggunakan NISN Anda</p>
+        
+        <div class="input-group">
+            <label>NISN Siswa</label>
+            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN...">
+        </div>
+        <button class="btn" onclick="prosesLogin()">Masuk</button>
+        <p id="error-msg" style="color: red; margin-top: 10px;" class="hidden"></p>
+    </div>
+
+    <div id="vote-page" class="hidden">
+        <div style="border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 2rem;">
+            <h3 id="display-nama" style="margin:0">Nama Siswa</h3>
+            <p id="display-kelas" style="color: #64748b; margin:0">Kelas</p>
+        </div>
+
+        <h2 style="text-align: center;">Kandidat Ketua & Wakil Ketua OSIS</h2>
+        
+        <div class="grid-paslon">
+            <div class="card">
+                <img src="https://via.placeholder.com/400x300?text=Paslon+01" alt="Paslon 1">
+                <div class="card-content">
+                    <h3>01. Aris & Linda</h3>
+                    <p>"Menciptakan lingkungan sekolah yang kreatif dan berbasis teknologi."</p>
+                    <button class="btn btn-vote" onclick="simpanSuara('Paslon 01')">Pilih Paslon 01</button>
+                </div>
             </div>
-            <button onclick="checkLogin()" class="w-full gradient-bg text-white font-bold py-3 rounded-lg hover:opacity-90 transition">Masuk</button>
-            <p id="login-error" class="text-red-500 text-sm mt-3 hidden text-center">NISN tidak terdaftar atau sudah memilih!</p>
+            <div class="card">
+                <img src="https://via.placeholder.com/400x300?text=Paslon+02" alt="Paslon 2">
+                <div class="card-content">
+                    <h3>02. Dedi & Sinta</h3>
+                    <p>"Mengutamakan kedisiplinan dan solidaritas antar ekstrakurikuler."</p>
+                    <button class="btn btn-vote" onclick="simpanSuara('Paslon 02')">Pilih Paslon 02</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="vote-section" class="min-h-screen p-6 hidden">
-        <div class="max-w-5xl mx-auto">
-            <div class="bg-white p-6 rounded-xl shadow-md mb-8 flex justify-between items-center">
-                <div>
-                    <h3 class="text-lg font-bold text-gray-800" id="user-name">Nama Siswa</h3>
-                    <p class="text-gray-500" id="user-class">Kelas</p>
-                </div>
-                <span class="bg-purple-100 text-purple-700 px-4 py-1 rounded-full text-sm font-semibold">Status: Belum Memilih</span>
-            </div>
+    <div id="thanks-page" class="hidden" style="text-align: center;">
+        <h1 style="font-size: 4rem;">🎉</h1>
+        <h2>Terima Kasih!</h2>
+        <p>Suara Anda sangat berarti bagi kemajuan sekolah.</p>
+        <p>Sistem akan kembali ke halaman login dalam 3 detik...</p>
+    </div>
+</div>
 
-            <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-10">Kandidat Ketua OSIS</h2>
+<script>
+    // DATA DATA SISWA (REKAYASA)
+    const daftarSiswa = [
+        { nisn: "22001", nama: "Budi Santoso", kelas: "X MIPA 1" },
+        { nisn: "22002", nama: "Siti Aminah", kelas: "XI IPS 2" },
+        { nisn: "22003", nama: "Rizky Pratama", kelas: "XII MIPA 4" },
+        { nisn: "22004", nama: "Dewi Lestari", kelas: "X IPS 1" },
+        { nisn: "22005", nama: "Andi Wijaya", kelas: "XII IPS 3" }
+    ];
+
+    let userAktif = null;
+
+    function prosesLogin() {
+        const nisnInput = document.getElementById('nisn-field').value;
+        const errorMsg = document.getElementById('error-msg');
+        
+        // 1. Cek apakah NISN ada di database
+        const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
+        
+        // 2. Cek apakah NISN sudah pernah memilih (di simpan di localStorage)
+        const sudahMemilih = localStorage.getItem('voted_' + nisnInput);
+
+        if (!siswa) {
+            errorMsg.innerText = "NISN tidak terdaftar!";
+            errorMsg.classList.remove('hidden');
+        } else if (sudahMemilih) {
+            errorMsg.innerText = "Maaf, NISN ini sudah digunakan untuk memilih!";
+            errorMsg.classList.remove('hidden');
+        } else {
+            userAktif = siswa;
+            document.getElementById('display-nama').innerText = siswa.nama;
+            document.getElementById('display-kelas').innerText = siswa.kelas;
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-purple-500 transition">
-                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400" class="w-full h-64 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-2">01. Budi & Siti</h3>
-                        <p class="text-gray-600 mb-4 font-medium">"Mewujudkan OSIS yang Kreatif, Digital, dan Inklusif bagi seluruh siswa."</p>
-                        <button onclick="submitVote('Paslon 01')" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700">Pilih Kandidat 01</button>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-transparent hover:border-green-500 transition">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" class="w-full h-64 object-cover">
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-2">02. Andi & Rina</h3>
-                        <p class="text-gray-600 mb-4 font-medium">"Menjadikan sekolah sebagai wadah kolaborasi seni dan olahraga yang unggul."</p>
-                        <button onclick="submitVote('Paslon 02')" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700">Pilih Kandidat 02</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="thanks-section" class="min-h-screen flex items-center justify-center p-4 hidden">
-        <div class="text-center bg-white p-10 rounded-3xl shadow-xl border-t-8 border-purple-500">
-            <div class="text-6xl mb-4">✅</div>
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Terima Kasih!</h2>
-            <p class="text-gray-600 mb-6">Suara Anda telah berhasil direkam ke dalam sistem.</p>
-            <button onclick="location.reload()" class="text-purple-600 font-semibold hover:underline">Kembali ke Beranda</button>
-        </div>
-    </div>
-
-    <script>
-        // DATA SISWA (SIMULASI DATABASE)
-        const databaseSiswa = [
-            { nisn: "1001", nama: "Ahmad Fauzi", kelas: "XII IPA 1" },
-            { nisn: "1002", nama: "Lestari Putri", kelas: "XII IPS 2" },
-            { nisn: "1003", nama: "Rizky Pratama", kelas: "XI MIPA 3" }
-        ];
-
-        let currentUser = null;
-
-        function checkLogin() {
-            const input = document.getElementById('nisn-input').value;
-            const user = databaseSiswa.find(s => s.nisn === input);
-
-            if (user) {
-                currentUser = user;
-                document.getElementById('user-name').innerText = user.nama;
-                document.getElementById('user-class').innerText = user.kelas;
-                
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('vote-section').classList.remove('hidden');
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('vote-page').classList.remove('hidden');
         }
+    }
 
-        function submitVote(kandidat) {
-            if(confirm(`Apakah Anda yakin memilih ${kandidat}?`)) {
-                console.log(`User ${currentUser.nama} memilih ${kandidat}`);
-                // Di sini biasanya kirim data ke database asli (Google Sheets/Firebase)
-                
-                document.getElementById('vote-section').classList.add('hidden');
-                document.getElementById('thanks-section').classList.remove('hidden');
-                
-                // Reset otomatis setelah 5 detik
-                setTimeout(() => { location.reload(); }, 5000);
-            }
+    function simpanSuara(pilihan) {
+        if(confirm(`Yakin ingin memilih ${pilihan}?`)) {
+            // Simpan status sudah memilih berdasarkan NISN
+            localStorage.setItem('voted_' + userAktif.nisn, "true");
+            
+            // Simpan hasil suara (Simulasi akumulasi)
+            let suaraSekarang = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
+            suaraSekarang[pilihan] += 1;
+            localStorage.setItem('rekap_suara', JSON.stringify(suaraSekarang));
+
+            // Pindah ke halaman terima kasih
+            document.getElementById('vote-page').classList.add('hidden');
+            document.getElementById('thanks-page').classList.remove('hidden');
+
+            setTimeout(() => { location.reload(); }, 3000);
         }
-    </script>
+    }
+</script>
 </body>
 </html>
