@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Rekapitulasi Suara</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <div class="dashboard-card">
+        <h1>Dashboard Real Count Panitia</h1>
+        <p>Data diambil secara akurat berdasarkan NISN yang terverifikasi.</p>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat-item">
+            <h3 id="v1">0</h3>
+            <p>Suara Paslon 01</p>
+        </div>
+        <div class="stat-item">
+            <h3 id="v2">0</h3>
+            <p>Suara Paslon 02</p>
+        </div>
+        <div class="stat-item">
+            <h3 id="vtotal">0</h3>
+            <p>Total Suara Masuk</p>
+        </div>
+    </div>
+
+    <div class="dashboard-card" style="margin-top:2rem">
+        <h3>Visualisasi Persentase</h3>
+        <p>Paslon 01</p>
+        <div class="progress-bar"><div id="bar1" class="progress-fill" style="width: 0%"></div></div>
+        
+        <br>
+        <p>Paslon 02</p>
+        <div class="progress-bar"><div id="bar2" class="progress-fill" style="width: 0%; background: #3b82f6"></div></div>
+    </div>
+
+    <script>
+        const dataSuara = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
+        const v1 = dataSuara["Paslon 01"];
+        const v2 = dataSuara["Paslon 02"];
+        const total = v1 + v2;
+
+        document.getElementById('v1').innerText = v1;
+        document.getElementById('v2').innerText = v2;
+        document.getElementById('vtotal').innerText = total;
+
+        if (total > 0) {
+            document.getElementById('bar1').style.width = (v1 / total * 100) + "%";
+            document.getElementById('bar2').style.width = (v2 / total * 100) + "%";
+        }
+    </script>
+</body>
+</html>
