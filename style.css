@@ -1,79 +1,173 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
+/* Root Variables untuk Konsistensi Warna */
 :root {
-    --primary: #4f46e5;
-    --secondary: #7c3aed;
-    --success: #10b981;
-    --danger: #ef4444;
+    --primary: #3b82f6; /* Biru muda */
+    --primary-dark: #2563eb;
+    --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #3b82f6 100%);
+    --bg-light: #f8fafc;
+    --text: #1e293b;
+    --white: #ffffff;
 }
 
+/* Base Body Styles */
 body {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
     margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 100vh;
 }
 
+/* Layout Container */
 .container {
-    width: 90%;
-    max-width: 1000px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
 }
 
-.hidden { display: none !important; }
+/* Card Box Style */
+.card-box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(5px);
+}
 
-/* Form Login */
-.login-box { max-width: 400px; margin: 0 auto; text-align: center; }
-.input-group { margin-bottom: 1.5rem; text-align: left; }
-input {
+/* Input Styles */
+.input-group {
+    margin-bottom: 1.2rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.input-group input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     border: 2px solid #e2e8f0;
     border-radius: 10px;
-    outline: none;
-    transition: 0.3s;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 }
-input:focus { border-color: var(--primary); }
 
-/* Card Paslon */
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+input[readonly] {
+    background-color: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+/* Button Styles */
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+.btn-vote {
+    background: #10b981; /* Emerald Green */
+    margin-top: 15px;
+}
+
+.btn-vote:hover {
+    background: #059669;
+}
+
+/* Paslon Grid & Image Resizing */
 .grid-paslon {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
     margin-top: 2rem;
 }
 
-.card {
-    background: white;
+.card-paslon {
+    border: 2px solid #e2e8f0;
     border-radius: 15px;
     overflow: hidden;
-    border: 1px solid #e2e8f0;
-    transition: 0.3s;
+    width: 240px; /* Ukuran kartu diperkecil sedikit */
     text-align: center;
+    background: white;
+    transition: all 0.3s ease;
 }
 
-.card:hover { transform: translateY(-10px); }
-.card img { width: 100%; height: 250px; object-fit: cover; }
-.card-content { padding: 1.5rem; }
+.card-paslon:hover {
+    border-color: var(--primary);
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
 
-.btn {
-    cursor: pointer;
-    background: var(--primary);
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
+/* Perintah: Ukuran Gambar Agak Kecil */
+.card-paslon img {
     width: 100%;
-    transition: 0.3s;
+    height: 180px; /* Diperkecil dari sebelumnya */
+    object-fit: cover;
+    border-bottom: 2px solid #f1f5f9;
 }
 
-.btn-vote { background: var(--success); }
-.btn-vote:hover { opacity: 0.9; }
+.card-content {
+    padding: 1.2rem;
+}
+
+.card-content h1 {
+    color: var(--primary-dark);
+    font-size: 2.5rem;
+}
+
+/* Helpers & Utilities */
+.hidden {
+    display: none;
+}
+
+.error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+#timer {
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 2.5rem;
+    margin: 10px 0;
+}
+
+/* Custom HR */
+hr {
+    border: 0;
+    border-top: 2px solid #f1f5f9;
+    margin: 2rem 0;
+}
