@@ -2,91 +2,125 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>E-Voting OSIS 2026</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Voting PEMILIHAN OSIS SMP ISLAM AZ-ZAHRO</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        input:readonly {
-            background-color: #f1f5f9;
-            color: #475569;
-            cursor: not-allowed;
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
         }
-        .hidden { display: none; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 1.5rem; }
+        .card-box { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         
-        /* CSS Tambahan sederhana jika belum ada style.css */
-        .container { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 1rem; }
-        .input-group { margin-bottom: 1rem; }
-        .input-group label { display: block; margin-bottom: 5px; }
-        .input-group input { width: 100%; padding: 8px; box-sizing: border-box; }
-        .btn { padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        .grid-paslon { display: flex; gap: 20px; justify-content: center; margin-top: 20px; }
-        .card { border: 1px solid #ddd; border-radius: 10px; overflow: hidden; width: 300px; text-align: center; }
-        .card img { width: 100%; height: auto; }
-        .card-content { padding: 15px; }
+        /* Input Styles */
+        input[readonly] { background-color: #f1f5f9; color: #64748b; cursor: not-allowed; }
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .input-group input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
+        
+        /* Button Styles */
+        .btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: 0.3s; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-vote { background: #059669; margin-top: 10px; }
+        .btn-vote:hover { background: #047857; }
+
+        /* Paslon Grid */
+        .grid-paslon { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+        .card-paslon { border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; width: 280px; text-align: center; background: white; transition: 0.3s; }
+        .card-paslon:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card-paslon img { width: 100%; height: 250px; object-fit: cover; }
+        .card-content { padding: 1.5rem; }
+
+        /* Helpers */
+        .hidden { display: none; }
+        .error { color: #dc2626; font-size: 0.9rem; margin-top: 5px; font-weight: bold; }
+        #timer { font-weight: bold; color: var(--primary); font-size: 1.5rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="login-page" class="login-box">
-        <h2 style="color: #1e293b; margin-bottom: 0.5rem;">E-Voting OSIS</h2>
-        <p style="color: #64748b; margin-bottom: 2rem;">Silahkan login menggunakan NISN Anda</p>
+    <div id="login-page" class="card-box">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="margin:0;">E-Voting OSIS</h2>
+            <h2 style="margin:0; color: var(--primary);">SMP ISLAM AZ-ZAHRO</h2>
+            <p style="color: #64748b;">Masa Bakti 2026/2027</p>
+        </div>
         
         <div class="input-group">
             <label>NISN Siswa</label>
-            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN..." oninput="cekNISN()">
+            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN..." oninput="cekNISN()" maxlength="5">
+            <p id="error-msg" class="error hidden"></p>
         </div>
 
         <div class="input-group">
-            <label>Nama Siswa (Otomatis)</label>
-            <input type="text" id="auto-nama" placeholder="-" readonly>
+            <label>Nama Siswa</label>
+            <input type="text" id="auto-nama" placeholder="Otomatis..." readonly>
         </div>
 
         <div class="input-group">
-            <label>Kelas (Otomatis)</label>
-            <input type="text" id="auto-kelas" placeholder="-" readonly>
+            <label>Kelas</label>
+            <input type="text" id="auto-kelas" placeholder="Otomatis..." readonly>
         </div>
         
-        <button class="btn" id="btn-masuk" onclick="prosesLogin()" disabled style="opacity: 0.5; cursor: not-allowed;">Masuk</button>
-        <p id="error-msg" style="color: red; margin-top: 10px;" class="hidden"></p>
+        <button class="btn" id="btn-masuk" onclick="prosesLogin()" disabled>Masuk ke Bilik Suara</button>
     </div>
 
     <div id="vote-page" class="hidden">
-        <div style="border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 2rem;">
-            <h3 id="display-nama" style="margin:0">Nama Siswa</h3>
-            <p id="display-kelas" style="color: #64748b; margin:0">Kelas</p>
+        <div class="card-box" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 id="display-nama" style="margin:0">Nama Siswa</h3>
+                <p id="display-kelas" style="color: #64748b; margin:0">Kelas</p>
+            </div>
+            <div style="text-align: right; color: var(--primary); font-weight: bold;">SURAT SUARA DIGITAL</div>
         </div>
 
-        <h2 style="text-align: center;">Kandidat Ketua & Wakil Ketua OSIS</h2>
+        <h2 style="text-align: center;">Tentukan Pilihan Anda</h2>
         
         <div class="grid-paslon">
-            <div class="card">
-                <img src="https://via.placeholder.com/400x300?text=Paslon+01" alt="Paslon 1">
+            <div class="card-paslon">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL_sLRPQsK5dNCqyhl-P3ulXn-GBMrpRtaTA&s" alt="Paslon 01">
                 <div class="card-content">
-                    <h3>01. Aris & Linda</h3>
-                    <p>"Menciptakan lingkungan sekolah yang kreatif dan berbasis teknologi."</p>
-                    <button class="btn btn-vote" onclick="simpanSuara('Paslon 01')">Pilih Paslon 01</button>
+                    <small>NOMOR URUT</small>
+                    <h1 style="margin:0">01</h1>
+                    <h3 style="margin: 10px 0;">Aris & Linda</h3>
+                    <button class="btn btn-vote" onclick="konfirmasiPilihan('Paslon 01')">Pilih Paslon 01</button>
                 </div>
             </div>
-            <div class="card">
-                <img src="https://via.placeholder.com/400x300?text=Paslon+02" alt="Paslon 2">
+
+            <div class="card-paslon">
+                <img src="https://i.pinimg.com/736x/29/3d/db/293ddb60b0670d087d2bc91eaec996ce.jpg" alt="Paslon 02">
                 <div class="card-content">
-                    <h3>02. Dedi & Sinta</h3>
-                    <p>"Mengutamakan kedisiplinan dan solidaritas antar ekstrakurikuler."</p>
-                    <button class="btn btn-vote" onclick="simpanSuara('Paslon 02')">Pilih Paslon 02</button>
+                    <small>NOMOR URUT</small>
+                    <h1 style="margin:0">02</h1>
+                    <h3 style="margin: 10px 0;">Dedi & Sinta</h3>
+                    <button class="btn btn-vote" onclick="konfirmasiPilihan('Paslon 02')">Pilih Paslon 02</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="thanks-page" class="hidden" style="text-align: center;">
-        <h1 style="font-size: 4rem;">🎉</h1>
-        <h2>Terima Kasih!</h2>
-        <p>Suara Anda sangat berarti bagi kemajuan sekolah.</p>
-        <p>Sistem akan kembali ke halaman login dalam 3 detik...</p>
+        <div class="card-box">
+            <h1 style="font-size: 4rem; margin: 0;">✅</h1>
+            <h2 style="color: #059669;">Suara Anda Berhasil Dikirim!</h2>
+            <p style="font-size: 1.2rem; line-height: 1.6;">
+                Terima kasih <strong id="msg-nama">NAMA</strong> (<strong id="msg-kelas">KELAS</strong>) <br>
+                telah menggunakan hak pilih Anda dalam Pemilihan OSIS 2026/2027.
+            </p>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0;">
+            <p style="color: #64748b;">Sistem akan otomatis kembali ke Login dalam:</p>
+            <div id="timer">10</div>
+            <p style="color: #94a3b8; font-size: 0.8rem; margin-top: 1rem;">KODE: SUKSES_VOTE_2026</p>
+        </div>
     </div>
 </div>
 
 <script>
+    // DATA MASTER SISWA
     const daftarSiswa = [
         { nisn: "22001", nama: "Budi Santoso", kelas: "X MIPA 1" },
         { nisn: "22002", nama: "Siti Aminah", kelas: "XI IPS 2" },
@@ -97,31 +131,27 @@
 
     let userAktif = null;
 
+    // 1. CEK NISN SAAT MENGETIK
     function cekNISN() {
         const nisnInput = document.getElementById('nisn-field').value;
         const autoNama = document.getElementById('auto-nama');
         const autoKelas = document.getElementById('auto-kelas');
         const btnMasuk = document.getElementById('btn-masuk');
         const errorMsg = document.getElementById('error-msg');
-
+        
         const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
 
         if (siswa) {
             autoNama.value = siswa.nama;
             autoKelas.value = siswa.kelas;
             btnMasuk.disabled = false;
-            btnMasuk.style.opacity = "1";
-            btnMasuk.style.cursor = "pointer";
             errorMsg.classList.add('hidden');
         } else {
             autoNama.value = "";
             autoKelas.value = "";
             btnMasuk.disabled = true;
-            btnMasuk.style.opacity = "0.5";
-            btnMasuk.style.cursor = "not-allowed";
-            
-            if(nisnInput.length >= 5) {
-                errorMsg.innerText = "NISN tidak terdaftar!";
+            if(nisnInput.length === 5) {
+                errorMsg.innerText = "NISN tidak terdaftar dalam DPT!";
                 errorMsg.classList.remove('hidden');
             } else {
                 errorMsg.classList.add('hidden');
@@ -129,41 +159,77 @@
         }
     }
 
+    // 2. PROSES LOGIN & CEK DOUBLE VOTE
     function prosesLogin() {
         const nisnInput = document.getElementById('nisn-field').value;
-        const errorMsg = document.getElementById('error-msg');
-        const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
         const sudahMemilih = localStorage.getItem('voted_' + nisnInput);
 
         if (sudahMemilih) {
-            errorMsg.innerText = "Maaf, NISN ini sudah digunakan untuk memilih!";
-            errorMsg.classList.remove('hidden');
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: 'Maaf, NISN ini sudah digunakan untuk memberikan suara!',
+                confirmButtonColor: '#2563eb'
+            });
         } else {
-            userAktif = siswa;
-            document.getElementById('display-nama').innerText = siswa.nama;
-            document.getElementById('display-kelas').innerText = siswa.kelas;
+            userAktif = daftarSiswa.find(s => s.nisn === nisnInput);
+            document.getElementById('display-nama').innerText = userAktif.nama;
+            document.getElementById('display-kelas').innerText = userAktif.kelas;
+            
             document.getElementById('login-page').classList.add('hidden');
             document.getElementById('vote-page').classList.remove('hidden');
         }
     }
 
-    // FUNGSI SIMPAN SUARA (SUDAH DIPERBARUI: TANPA KONFIRMASI)
+    // 3. KONFIRMASI DENGAN SWEETALERT
+    function konfirmasiPilihan(pilihan) {
+        Swal.fire({
+            title: 'Konfirmasi Pilihan',
+            text: `Anda akan memilih ${pilihan}. Pilihan tidak dapat diubah kembali!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#059669',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Saya Yakin!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                simpanSuara(pilihan);
+            }
+        })
+    }
+
+    // 4. SIMPAN SUARA & COUNTDOWN
     function simpanSuara(pilihan) {
-        // Langsung simpan status sudah memilih
+        // Simpan tanda sudah memilih
         localStorage.setItem('voted_' + userAktif.nisn, "true");
         
-        // Update rekap suara di localStorage
-        let suaraSekarang = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
-        suaraSekarang[pilihan] += 1;
-        localStorage.setItem('rekap_suara', JSON.stringify(suaraSekarang));
+        // Simpan rekap suara
+        let rekap = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
+        rekap[pilihan] += 1;
+        localStorage.setItem('rekap_suara', JSON.stringify(rekap));
 
-        // Pindah ke halaman terima kasih
+        // Isi data di halaman terima kasih
+        document.getElementById('msg-nama').innerText = userAktif.nama;
+        document.getElementById('msg-kelas').innerText = userAktif.kelas;
+
+        // Pindah Halaman
         document.getElementById('vote-page').classList.add('hidden');
         document.getElementById('thanks-page').classList.remove('hidden');
 
-        // Reset halaman setelah 3 detik
-        setTimeout(() => { location.reload(); }, 3000);
+        // Jalankan Timer
+        let detik = 10;
+        const timerElement = document.getElementById('timer');
+        const interval = setInterval(() => {
+            detik--;
+            timerElement.innerText = detik;
+            if (detik <= 0) {
+                clearInterval(interval);
+                location.reload();
+            }
+        }, 1000);
     }
 </script>
+
 </body>
 </html>
