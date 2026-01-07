@@ -1,158 +1,79 @@
-/* Palette Warna & Variabel */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 :root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --accent-gradient: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
-    --white-glass: rgba(255, 255, 255, 0.9);
-    --text-dark: #2d3436;
-    --shadow: 0 15px 35px rgba(0,0,0,0.2);
+    --primary: #4f46e5;
+    --secondary: #7c3aed;
+    --success: #10b981;
+    --danger: #ef4444;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--primary-gradient);
-    background-attachment: fixed;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    margin: 0;
     display: flex;
     align-items: center;
-    margin: 0;
-    color: var(--text-dark);
+    justify-content: center;
 }
 
 .container {
-    width: 100%;
+    width: 90%;
     max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 20px;
-}
-
-/* Glassmorphism Effect untuk Card */
-.card-box {
-    background: var(--white-glass);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 3rem;
-    border-radius: 24px;
-    box-shadow: var(--shadow);
-    animation: fadeIn 0.6s ease-out;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.hidden { display: none !important; }
 
-/* Input Styles */
-.input-group {
-    margin-bottom: 1.5rem;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #4834d4;
-}
-
-.input-group input {
+/* Form Login */
+.login-box { max-width: 400px; margin: 0 auto; text-align: center; }
+.input-group { margin-bottom: 1.5rem; text-align: left; }
+input {
     width: 100%;
-    padding: 14px 18px;
-    border: 2px solid #dfe6e9;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s;
-    background: white;
-}
-
-.input-group input:focus {
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-}
-
-input[readonly] {
-    background-color: #f9f9f9;
-    color: #636e72;
-    cursor: not-allowed;
-}
-
-/* Button Styles */
-.btn {
-    width: 100%;
-    padding: 15px;
-    background: var(--primary-gradient);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 700;
     transition: 0.3s;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
+input:focus { border-color: var(--primary); }
 
-.btn:hover:not(:disabled) {
-    transform: scale(1.02);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-}
-
-.btn:disabled {
-    filter: grayscale(1);
-    opacity: 0.6;
-}
-
-/* Paslon Grid */
+/* Card Paslon */
 .grid-paslon {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    gap: 2rem;
     margin-top: 2rem;
 }
 
-.card-paslon {
+.card {
     background: white;
-    border-radius: 20px;
+    border-radius: 15px;
     overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: 0.4s;
-    border: 3px solid transparent;
-}
-
-.card-paslon:hover {
-    transform: translateY(-10px);
-    border-color: #667eea;
-}
-
-.card-paslon img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-}
-
-.card-content {
-    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+    transition: 0.3s;
     text-align: center;
 }
 
-.btn-vote {
-    background: var(--accent-gradient);
-    box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
+.card:hover { transform: translateY(-10px); }
+.card img { width: 100%; height: 250px; object-fit: cover; }
+.card-content { padding: 1.5rem; }
+
+.btn {
+    cursor: pointer;
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    width: 100%;
+    transition: 0.3s;
 }
 
-/* Timer & Helpers */
-#timer {
-    font-size: 3rem;
-    font-weight: 800;
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hidden { display: none; }
-
-.error {
-    color: #d63031;
-    font-size: 0.85rem;
-    margin-top: 8px;
-    padding-left: 5px;
-}
+.btn-vote { background: var(--success); }
+.btn-vote:hover { opacity: 0.9; }
