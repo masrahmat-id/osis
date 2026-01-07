@@ -1,121 +1,111 @@
-/* Import Font dari Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-
+/* Palette Warna & Variabel */
 :root {
-    --primary-color: #4f46e5;
-    --primary-light: #818cf8;
-    --secondary-color: #0ea5e9;
-    --success-color: #10b981;
-    --danger-color: #ef4444;
-    --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --accent-gradient: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    --white-glass: rgba(255, 255, 255, 0.9);
+    --text-dark: #2d3436;
+    --shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--bg-gradient);
+    font-family: 'Poppins', sans-serif;
+    background: var(--primary-gradient);
     background-attachment: fixed;
     min-height: 100vh;
-    margin: 0;
-    color: #1e293b;
     display: flex;
     align-items: center;
+    margin: 0;
+    color: var(--text-dark);
 }
 
 .container {
     width: 100%;
     max-width: 1000px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 0 20px;
 }
 
-/* Card Styling */
+/* Glassmorphism Effect untuk Card */
 .card-box {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--white-glass);
     backdrop-filter: blur(10px);
-    padding: 2.5rem;
-    border-radius: 24px;
-    box-shadow: var(--card-shadow);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 3rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.6s ease-out;
 }
 
-/* Typography */
-h2 {
-    font-weight: 800;
-    letter-spacing: -0.5px;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Input Fields */
+/* Input Styles */
 .input-group {
     margin-bottom: 1.5rem;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: 600;
     font-size: 0.9rem;
-    color: #475569;
+    color: #4834d4;
 }
 
 .input-group input {
     width: 100%;
     padding: 14px 18px;
-    border: 2px solid #e2e8f0;
+    border: 2px solid #dfe6e9;
     border-radius: 12px;
     font-size: 1rem;
-    transition: all 0.3s ease;
-    background: #ffffff;
+    transition: all 0.3s;
+    background: white;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: var(--primary-light);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 
 input[readonly] {
-    background-color: #f8fafc;
-    border-color: #f1f5f9;
-    color: #64748b;
+    background-color: #f9f9f9;
+    color: #636e72;
+    cursor: not-allowed;
 }
 
-/* Buttons */
+/* Button Styles */
 .btn {
     width: 100%;
-    padding: 14px;
-    background: var(--primary-color);
+    padding: 15px;
+    background: var(--primary-gradient);
     color: white;
     border: none;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    background: #4338ca;
-    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
-}
-
-.btn:active {
-    transform: scale(0.98);
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
 }
 
 .btn:disabled {
-    background: #cbd5e1;
-    cursor: not-allowed;
-    box-shadow: none;
+    filter: grayscale(1);
+    opacity: 0.6;
 }
 
-/* Paslon Cards */
+/* Paslon Grid */
 .grid-paslon {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: 30px;
     margin-top: 2rem;
 }
 
@@ -123,22 +113,20 @@ input[readonly] {
     background: white;
     border-radius: 20px;
     overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: 0.4s;
     border: 3px solid transparent;
-    transition: all 0.4s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 .card-paslon:hover {
-    border-color: var(--secondary-color);
     transform: translateY(-10px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: #667eea;
 }
 
 .card-paslon img {
     width: 100%;
     height: 300px;
     object-fit: cover;
-    background: #f1f5f9;
 }
 
 .card-content {
@@ -146,52 +134,25 @@ input[readonly] {
     text-align: center;
 }
 
-.card-content small {
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--secondary-color);
-    font-weight: 800;
-}
-
 .btn-vote {
-    background: var(--success-color);
-    margin-top: 1rem;
+    background: var(--accent-gradient);
+    box-shadow: 0 4px 15px rgba(0, 176, 155, 0.3);
 }
 
-.btn-vote:hover {
-    background: #059669 !important;
-}
-
-/* Timer & Success Page */
+/* Timer & Helpers */
 #timer {
     font-size: 3rem;
     font-weight: 800;
-    color: var(--primary-color);
-    background: #eef2ff;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    border-radius: 50%;
-    margin: 1.5rem auto;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.hidden { display: none !important; }
+.hidden { display: none; }
 
 .error {
-    background: #fef2f2;
-    color: var(--danger-color);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-top: 10px;
-    border-left: 4px solid var(--danger-color);
-}
-
-/* Animasi sederhana */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#login-page, #vote-page, #thanks-page {
-    animation: fadeIn 0.5s ease forwards;
+    color: #d63031;
+    font-size: 0.85rem;
+    margin-top: 8px;
+    padding-left: 5px;
 }
