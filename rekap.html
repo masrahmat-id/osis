@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Real Count</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 border-b border-gray-700 pb-4 text-center text-yellow-400">Hasil Real Count OSIS</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-center">
+            <div class="bg-slate-800 p-6 rounded-xl border border-gray-700">
+                <p class="text-gray-400">Total Suara Masuk</p>
+                <p class="text-4xl font-bold mt-2">1,240</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-gray-700">
+                <p class="text-gray-400 text-blue-400">Paslon 01</p>
+                <p class="text-4xl font-bold mt-2">720</p>
+            </div>
+            <div class="bg-slate-800 p-6 rounded-xl border border-gray-700">
+                <p class="text-gray-400 text-green-400">Paslon 02</p>
+                <p class="text-4xl font-bold mt-2">520</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl">
+            <canvas id="rekapChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('rekapChart');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Paslon 01 (Budi-Siti)', 'Paslon 02 (Andi-Rina)'],
+                datasets: [{
+                    label: 'Jumlah Suara',
+                    data: [720, 520],
+                    backgroundColor: ['#2563eb', '#16a34a'],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
