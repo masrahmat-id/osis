@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <title>E-Voting OSIS 2026</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Tambahan style untuk preview otomatis */
+        .preview-box {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
 
@@ -14,9 +26,16 @@
         
         <div class="input-group">
             <label>NISN Siswa</label>
-            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN...">
+            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN..." oninput="cekNISNOtomatis()">
         </div>
-        <button class="btn" onclick="prosesLogin()">Masuk</button>
+
+        <div id="preview-user" class="preview-box hidden">
+            <small style="color: #64748b;">Data ditemukan:</small>
+            <div id="preview-nama" style="font-weight: bold; color: #1e293b;"></div>
+            <div id="preview-kelas" style="font-size: 0.9rem; color: #64748b;"></div>
+        </div>
+
+        <button class="btn" style="margin-top: 20px;" onclick="prosesLogin()">Masuk</button>
         <p id="error-msg" style="color: red; margin-top: 10px;" class="hidden"></p>
     </div>
 
@@ -57,7 +76,6 @@
 </div>
 
 <script>
-    // DATA DATA SISWA (REKAYASA)
     const daftarSiswa = [
         { nisn: "22001", nama: "Budi Santoso", kelas: "X MIPA 1" },
         { nisn: "22002", nama: "Siti Aminah", kelas: "XI IPS 2" },
@@ -68,14 +86,34 @@
 
     let userAktif = null;
 
+    // FUNGSI BARU: Deteksi otomatis saat mengetik
+    function cekNISNOtomatis() {
+        const nisnInput = document.getElementById('nisn-field').value;
+        const previewBox = document.getElementById('preview-user');
+        const previewNama = document.getElementById('preview-nama');
+        const previewKelas = document.getElementById('preview-kelas');
+        const errorMsg = document.getElementById('error-msg');
+
+        // Cari siswa berdasarkan input
+        const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
+
+        if (siswa) {
+            // Jika ketemu, tampilkan profil singkat
+            previewNama.innerText = siswa.nama;
+            previewKelas.innerText = siswa.kelas;
+            previewBox.classList.remove('hidden');
+            errorMsg.classList.add('hidden'); // Sembunyikan error jika sebelumnya ada
+        } else {
+            // Jika tidak ketemu atau dihapus, sembunyikan profil
+            previewBox.classList.add('hidden');
+        }
+    }
+
     function prosesLogin() {
         const nisnInput = document.getElementById('nisn-field').value;
         const errorMsg = document.getElementById('error-msg');
         
-        // 1. Cek apakah NISN ada di database
         const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
-        
-        // 2. Cek apakah NISN sudah pernah memilih (di simpan di localStorage)
         const sudahMemilih = localStorage.getItem('voted_' + nisnInput);
 
         if (!siswa) {
@@ -96,15 +134,11 @@
 
     function simpanSuara(pilihan) {
         if(confirm(`Yakin ingin memilih ${pilihan}?`)) {
-            // Simpan status sudah memilih berdasarkan NISN
             localStorage.setItem('voted_' + userAktif.nisn, "true");
-            
-            // Simpan hasil suara (Simulasi akumulasi)
             let suaraSekarang = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
             suaraSekarang[pilihan] += 1;
             localStorage.setItem('rekap_suara', JSON.stringify(suaraSekarang));
 
-            // Pindah ke halaman terima kasih
             document.getElementById('vote-page').classList.add('hidden');
             document.getElementById('thanks-page').classList.remove('hidden');
 
