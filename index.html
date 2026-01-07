@@ -5,14 +5,11 @@
     <title>E-Voting OSIS 2026</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Tambahan style untuk preview otomatis */
-        .preview-box {
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #e2e8f0;
-            text-align: left;
+        /* Tambahan style agar tampilan input otomatis terlihat berbeda */
+        input:readonly {
+            background-color: #f1f5f9;
+            color: #475569;
+            cursor: not-allowed;
         }
         .hidden { display: none; }
     </style>
@@ -26,16 +23,20 @@
         
         <div class="input-group">
             <label>NISN Siswa</label>
-            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN..." oninput="cekNISNOtomatis()">
+            <input type="text" id="nisn-field" placeholder="Masukkan 5 digit NISN..." oninput="cekNISN()">
         </div>
 
-        <div id="preview-user" class="preview-box hidden">
-            <small style="color: #64748b;">Data ditemukan:</small>
-            <div id="preview-nama" style="font-weight: bold; color: #1e293b;"></div>
-            <div id="preview-kelas" style="font-size: 0.9rem; color: #64748b;"></div>
+        <div class="input-group">
+            <label>Nama Siswa (Otomatis)</label>
+            <input type="text" id="auto-nama" placeholder="-" readonly>
         </div>
 
-        <button class="btn" style="margin-top: 20px;" onclick="prosesLogin()">Masuk</button>
+        <div class="input-group">
+            <label>Kelas (Otomatis)</label>
+            <input type="text" id="auto-kelas" placeholder="-" readonly>
+        </div>
+        
+        <button class="btn" id="btn-masuk" onclick="prosesLogin()" disabled style="opacity: 0.5; cursor: not-allowed;">Masuk</button>
         <p id="error-msg" style="color: red; margin-top: 10px;" class="hidden"></p>
     </div>
 
@@ -86,40 +87,52 @@
 
     let userAktif = null;
 
-    // FUNGSI BARU: Deteksi otomatis saat mengetik
-    function cekNISNOtomatis() {
+    // FUNGSI CEK NISN OTOMATIS
+    function cekNISN() {
         const nisnInput = document.getElementById('nisn-field').value;
-        const previewBox = document.getElementById('preview-user');
-        const previewNama = document.getElementById('preview-nama');
-        const previewKelas = document.getElementById('preview-kelas');
+        const autoNama = document.getElementById('auto-nama');
+        const autoKelas = document.getElementById('auto-kelas');
+        const btnMasuk = document.getElementById('btn-masuk');
         const errorMsg = document.getElementById('error-msg');
 
-        // Cari siswa berdasarkan input
+        // Cari data siswa
         const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
 
         if (siswa) {
-            // Jika ketemu, tampilkan profil singkat
-            previewNama.innerText = siswa.nama;
-            previewKelas.innerText = siswa.kelas;
-            previewBox.classList.remove('hidden');
-            errorMsg.classList.add('hidden'); // Sembunyikan error jika sebelumnya ada
+            // Jika ketemu, isi kolom nama & kelas
+            autoNama.value = siswa.nama;
+            autoKelas.value = siswa.kelas;
+            
+            // Aktifkan tombol masuk
+            btnMasuk.disabled = false;
+            btnMasuk.style.opacity = "1";
+            btnMasuk.style.cursor = "pointer";
+            errorMsg.classList.add('hidden');
         } else {
-            // Jika tidak ketemu atau dihapus, sembunyikan profil
-            previewBox.classList.add('hidden');
+            // Jika tidak ketemu/sedang mengetik
+            autoNama.value = "";
+            autoKelas.value = "";
+            btnMasuk.disabled = true;
+            btnMasuk.style.opacity = "0.5";
+            btnMasuk.style.cursor = "not-allowed";
+            
+            // Tampilkan error hanya jika sudah mengetik minimal 5 angka
+            if(nisnInput.length >= 5) {
+                errorMsg.innerText = "NISN tidak terdaftar!";
+                errorMsg.classList.remove('hidden');
+            } else {
+                errorMsg.classList.add('hidden');
+            }
         }
     }
 
     function prosesLogin() {
         const nisnInput = document.getElementById('nisn-field').value;
         const errorMsg = document.getElementById('error-msg');
-        
         const siswa = daftarSiswa.find(s => s.nisn === nisnInput);
         const sudahMemilih = localStorage.getItem('voted_' + nisnInput);
 
-        if (!siswa) {
-            errorMsg.innerText = "NISN tidak terdaftar!";
-            errorMsg.classList.remove('hidden');
-        } else if (sudahMemilih) {
+        if (sudahMemilih) {
             errorMsg.innerText = "Maaf, NISN ini sudah digunakan untuk memilih!";
             errorMsg.classList.remove('hidden');
         } else {
@@ -135,6 +148,7 @@
     function simpanSuara(pilihan) {
         if(confirm(`Yakin ingin memilih ${pilihan}?`)) {
             localStorage.setItem('voted_' + userAktif.nisn, "true");
+            
             let suaraSekarang = JSON.parse(localStorage.getItem('rekap_suara')) || { "Paslon 01": 0, "Paslon 02": 0 };
             suaraSekarang[pilihan] += 1;
             localStorage.setItem('rekap_suara', JSON.stringify(suaraSekarang));
