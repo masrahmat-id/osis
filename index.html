@@ -58,12 +58,12 @@
 
         <div class="input-group">
             <label>Nama Siswa</label>
-            <input type="text" id="auto-nama" placeholder="Otomatis..." readonly>
+            <input type="text" id="auto-nama" placeholder=" " readonly>
         </div>
 
         <div class="input-group">
             <label>Kelas</label>
-            <input type="text" id="auto-kelas" placeholder="Otomatis..." readonly>
+            <input type="text" id="auto-kelas" placeholder=" " readonly>
         </div>
         
         <button class="btn" id="btn-masuk" onclick="prosesLogin()" disabled>Masuk ke Bilik Suara</button>
@@ -122,13 +122,86 @@
 <script>
     // DATA MASTER SISWA
     const daftarSiswa = [
-        { nisn: "22001", nama: "Budi Santoso", kelas: "X MIPA 1" },
-        { nisn: "22002", nama: "Siti Aminah", kelas: "XI IPS 2" },
-        { nisn: "22003", nama: "Rizky Pratama", kelas: "XII MIPA 4" },
-        { nisn: "22004", nama: "Dewi Lestari", kelas: "X IPS 1" },
-        { nisn: "22005", nama: "Andi Wijaya", kelas: "XII IPS 3" }
-    ];
-
+    { nama: "ADINDA PUTRI WULANDARI", nisn: "0134037607", kelas: "Kelas 7" },
+    { nama: "ADITYA EKA SAPUTRA", nisn: "0109531186", kelas: "Kelas 9" },
+    { nama: "Agung Saputra", nisn: "0124569275", kelas: "Kelas 8" },
+    { nama: "Ahmad Habibi Maulana", nisn: "0082114134", kelas: "Kelas 9" },
+    { nama: "AHMAD MUZAMMIL", nisn: "0114076427", kelas: "Kelas 8" },
+    { nama: "AHMAD UBADAH", nisn: "0116219532", kelas: "Kelas 9" },
+    { nama: "ALDI MAKSUDI", nisn: "0135729942", kelas: "Kelas 7" },
+    { nama: "ALYA NASYITA SABHIRAH", nisn: "0116487325", kelas: "Kelas 7" },
+    { nama: "ANDHIKA BAGUS RAMADHAN", nisn: "3113634149", kelas: "Kelas 9" },
+    { nama: "ARIN HISFUALAH", nisn: "0127682320", kelas: "Kelas 9" },
+    { nama: "AULIA NUR IZZATUNNISA", nisn: "0137321076", kelas: "Kelas 7" },
+    { nama: "AULIA TRI WULANDARI", nisn: "0118448341", kelas: "Kelas 8" },
+    { nama: "Avita Hemiyatin", nisn: "0112483701", kelas: "Kelas 9" },
+    { nama: "DANDI", nisn: "0124159506", kelas: "Kelas 9" },
+    { nama: "DEDY SUPRIADI", nisn: "3132272667", kelas: "Kelas 7" },
+    { nama: "Devita Masuro", nisn: "0104776302", kelas: "Kelas 9" },
+    { nama: "DIMAS ARIF MAULANA", nisn: "0107204403", kelas: "Kelas 9" },
+    { nama: "EILIYAH MUNIFAH", nisn: "0139364783", kelas: "Kelas 7" },
+    { nama: "FANIA RAHMAWATI", nisn: "0102655649", kelas: "Kelas 7" },
+    { nama: "FARAH NATIFA AZZAHRO WAKIK", nisn: "0128105446", kelas: "Kelas 7" },
+    { nama: "Ferdi maulana", nisn: "0101209945", kelas: "Kelas 9" },
+    { nama: "FITA FATIMATUZ ZAHRO", nisn: "0108458268", kelas: "Kelas 8" },
+    { nama: "HAFIZHAH NAYLA EFFENDI", nisn: "3125128511", kelas: "Kelas 7" },
+    { nama: "INTAN ASRI BARIKOH", nisn: "0126073827", kelas: "Kelas 8" },
+    { nama: "Kefin", nisn: "0126913609", kelas: "Kelas 8" },
+    { nama: "KHODIJAH ADZKIA MADZKUR", nisn: "0136216764", kelas: "Kelas 7" },
+    { nama: "KHOIRUL ANWAR", nisn: "0101792722", kelas: "Kelas 9" },
+    { nama: "Kholidatuz Zahra", nisn: "0126899873", kelas: "Kelas 8" },
+    { nama: "Kiki Stifani", nisn: "0108990601", kelas: "Kelas 9" },
+    { nama: "LAILA NUR FILA SYAFA", nisn: "0114950342", kelas: "Kelas 9" },
+    { nama: "LULUK", nisn: "3126871400", kelas: "Kelas 8" },
+    { nama: "MELVINA LUTFIYAH", nisn: "0122991772", kelas: "Kelas 7" },
+    { nama: "MIKE OKTA VIONA PUTRI", nisn: "0115216409", kelas: "Kelas 8" },
+    { nama: "MOCH. RIKY ARDIANSYAH", nisn: "0117545656", kelas: "Kelas 8" },
+    { nama: "Mohammad Fatthunur Faizin", nisn: "0117508351", kelas: "Kelas 9" },
+    { nama: "Mohammad Ferianto", nisn: "0102633447", kelas: "Kelas 9" },
+    { nama: "Mohammad NOR HALIL", nisn: "0113455193", kelas: "Kelas 8" },
+    { nama: "Muhammad Ali Ramdani", nisn: "0114646962", kelas: "Kelas 9" },
+    { nama: "Muhammad Kholili Ihsan", nisn: "0056776059", kelas: "Kelas 8" },
+    { nama: "Muhammad LUTFI JAELANI", nisn: "0121397040", kelas: "Kelas 7" },
+    { nama: "Muhammad Rifki Saputra", nisn: "0126709367", kelas: "Kelas 8" },
+    { nama: "Muhammad Rizal", nisn: "0111850063", kelas: "Kelas 7" },
+    { nama: "MUHAMMAD RIZAL", nisn: "0121477614", kelas: "Kelas 8" },
+    { nama: "MUHAMMAD ROIHAN", nisn: "0094134364", kelas: "Kelas 9" },
+    { nama: "Muhammad Royhan Zainurullah", nisn: "0123939051", kelas: "Kelas 8" },
+    { nama: "MUHAMMAD ZAENUL RIFA'I", nisn: "0121625332", kelas: "Kelas 7" },
+    { nama: "MUKHLAS", nisn: "0081874393", kelas: "Kelas 9" },
+    { nama: "MUKHLIS", nisn: "0082165609", kelas: "Kelas 9" },
+    { nama: "NABILA RIZKI WARDANI", nisn: "0124965710", kelas: "Kelas 7" },
+    { nama: "NASILA", nisn: "0124210394", kelas: "Kelas 7" },
+    { nama: "Nasivatul Balgis Bakhira", nisn: "0115851571", kelas: "Kelas 9" },
+    { nama: "NIA AFKARINA", nisn: "3115213725", kelas: "Kelas 7" },
+    { nama: "NUR FADILAH ANGGRAINI", nisn: "0103189776", kelas: "Kelas 9" },
+    { nama: "NURUL HIDAYATI", nisn: "3135207384", kelas: "Kelas 7" },
+    { nama: "RATNA ROBIYATUL HASANAH", nisn: "0125462713", kelas: "Kelas 8" },
+    { nama: "RIFZIKA DJAMILATUS SUBHAN", nisn: "0102533380", kelas: "Kelas 9" },
+    { nama: "RINA AIRIN", nisn: "0125822955", kelas: "Kelas 7" },
+    { nama: "RINA KHOMARIYAH", nisn: "3114305251", kelas: "Kelas 9" },
+    { nama: "RINI SAMSIYAH", nisn: "3118153763", kelas: "Kelas 9" },
+    { nama: "RISKA MAULIDIA", nisn: "3119713408", kelas: "Kelas 9" },
+    { nama: "SHERLY KAYLA PUTRI", nisn: "0125570800", kelas: "Kelas 7" },
+    { nama: "SILVI IZZATUL MAULIDAH", nisn: "3115006209", kelas: "Kelas 9" },
+    { nama: "SILVINA RAHMATILLAH", nisn: "0126032760", kelas: "Kelas 8" },
+    { nama: "SITI AISAH", nisn: "0125815966", kelas: "Kelas 7" },
+    { nama: "SITI ANISAH", nisn: "0122772869", kelas: "Kelas 7" },
+    { nama: "Siti Armilatur Rohmah", nisn: "0129024470", kelas: "Kelas 8" },
+    { nama: "SITI FATIJAH NURAINI", nisn: "0126236735", kelas: "Kelas 7" },
+    { nama: "SITI NUR JANNAH SABILA PUTRI", nisn: "0125858066", kelas: "Kelas 7" },
+    { nama: "Siti Umi Salsabila", nisn: "0108426165", kelas: "Kelas 8" },
+    { nama: "SITTI LAINI", nisn: "0104373040", kelas: "Kelas 9" },
+    { nama: "Sofiya Latifah", nisn: "0108117463", kelas: "Kelas 9" },
+    { nama: "TRY ANGGUN NUR FADILAH", nisn: "0107080615", kelas: "Kelas 9" },
+    { nama: "Ummi Sofia Sa'ada", nisn: "0116540904", kelas: "Kelas 9" },
+    { nama: "VIAN EFENDI", nisn: "0123878351", kelas: "Kelas 7" },
+    { nama: "Wita", nisn: "0104779685", kelas: "Kelas 9" },
+    { nama: "WULAN DARI", nisn: "3139540746", kelas: "Kelas 8" },
+    { nama: "WULAN TRIAMITA RAHARJO", nisn: "0113090039", kelas: "Kelas 8" },
+    { nama: "Yusi Yuliana Dewi", nisn: "0102912322", kelas: "Kelas 9" },
+    { nama: "Zahratul Maulidya", nisn: "0129963430", kelas: "Kelas 8" }
+];
     let userAktif = null;
 
     // 1. CEK NISN SAAT MENGETIK
